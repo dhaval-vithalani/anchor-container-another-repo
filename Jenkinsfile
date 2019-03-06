@@ -48,7 +48,7 @@ node {
       },
       Analyze: {
 	    sh 'echo "docker.io/dhaval3905/demo-repository:latest `pwd`/Dockerfile" > anchore_images'
-            anchore name: 'anchore_images'
+            anchore bailOnFail: false, bailOnPluginFail: false, name: 'anchore_images'
       }
     }
   } finally {
