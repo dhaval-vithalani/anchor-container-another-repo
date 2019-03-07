@@ -31,13 +31,6 @@ node {
       anchorefile = path + "/anchore_images"
     }
 
-    stage('Build') {
-      // Build the image and push it to a staging repository
-      repotag = inputConfig['dockerRepository'] + ":${BUILD_NUMBER}"
-      docker.withRegistry(inputConfig['dockerRegistryUrl'], inputConfig['dockerCredentials']) {
-        app = docker.build(repotag)
-        app.push()
-      }
     }
 
     stage('Parallel') {
@@ -47,7 +40,7 @@ node {
         }
       },
       Analyze: {
-	    sh 'echo "docker.io/dhaval3905/java-11:custom-debian-buster-openjdk `pwd`/Dockerfile" > anchore_images'
+	    sh 'echo "docker.io/dhaval3905/centos-openjdk-11:latest `pwd`/Dockerfile" > anchore_images'
             anchore bailOnFail: false, bailOnPluginFail: false, name: 'anchore_images'
       }
     }
