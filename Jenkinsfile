@@ -22,28 +22,26 @@ node {
   def repotag
 
   try {
-    stage('Checkout') {
-      // Clone the git repository
-      checkout scm
-      def path = sh returnStdout: true, script: "pwd"
-      path = path.trim()
-      dockerfile = path + "/Dockerfile"
-      anchorefile = path + "/anchore_images"
-    }
-
-    }
-
-    stage('Parallel') {
-      parallel Test: {
-        app.inside {
-            sh 'echo "Dummy - tests passed"'
-        }
-      },
-      Analyze: {
-	    sh 'echo "docker.io/dhaval3905/centos-openjdk-11:latest `pwd`/Dockerfile" > anchore_images'
-            anchore bailOnFail: false, bailOnPluginFail: false, name: 'anchore_images'
+      stage('Checkout') {
+        // Clone the git repository
+        checkout scm
+        def path = sh returnStdout: true, script: "pwd"
+        path = path.trim()
+        dockerfile = path + "/Dockerfile"
+        anchorefile = path + "/anchore_images"
       }
-    }
+
+      stage('Parallel') {
+        parallel Test: {
+          app.inside {
+              sh 'echo "Dummy - tests passed"'
+          }
+        },
+        Analyze: {
+        sh 'echo "docker.io/dhaval3905/centos-openjdk-11:latest `pwd`/Dockerfile" > anchore_images'
+              anchore bailOnFail: false, bailOnPluginFail: false, name: 'anchore_images'
+        }
+      }
   } finally {
     stage('Cleanup') {
       // Delete the docker image and clean up any allotted resources
