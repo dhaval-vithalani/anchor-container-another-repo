@@ -19,7 +19,6 @@ node {
   def app
   def dockerfile
   def anchorefile
-  def repotag
 
   try {
       stage('Checkout') {
