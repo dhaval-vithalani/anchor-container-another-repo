@@ -8,11 +8,6 @@ stage('Configure') {
           abort = true
         }
     }
-
-    if (abort) {
-        currentBuild.result = 'ABORTED'
-        error('Aborting build due to invalid input')
-    }
 }
 
 node {
